@@ -63,6 +63,19 @@ test("the world's settings are the world's and the player's are the player's", (
   assert.equal(scope("delay"), "client");
 });
 
+test("a fresh world frames every portrait, with nothing to switch on first", () => {
+  // The registered default and the drawing rule's own default have to agree, or
+  // a world that has never touched the setting behaves one way in Foundry and
+  // another in the tests.
+  const option = registered.find((s) => s.key === cameo.PLAYERS_ONLY);
+  assert.equal(option.options.default, false);
+  assert.equal(
+    cameo.showsPanel({ visible: true, img: "p/the-prince.webp", hasPlayerOwner: false }),
+    true,
+    "an NPC with a portrait is framed before anyone configures anything"
+  );
+});
+
 test("the file index is hidden, because players may not browse files", () => {
   const index = registered.find((s) => s.key === "markIndex");
   assert.equal(index.options.config, false);

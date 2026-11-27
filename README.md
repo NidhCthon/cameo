@@ -22,7 +22,9 @@ To set one by hand on a single actor, put the image's path in the actor's `cameo
 
 **Name on the frame** (world). Writes the token's name across the banderole. It follows the token's own nameplate setting, so a token whose nameplate a player does not get is also unnamed on their panel.
 
-**Player characters only** (world). On by default, so the table's own characters get a cameo and the rest of the board does not. It asks whether a player owns the actor rather than what type the actor is, because an actor type called `character` is a habit of the systems Foundry ships with and not a rule: World of Darkness calls its types PC, Vampire and Mortal, Pathfinder has its own names again, and ownership means the same thing in all of them. Turn it off to frame every token with a portrait of its own, NPCs included, which is also what to do if you have not handed your players their actors yet.
+**Player characters only** (world). Off by default, so every token with a portrait of its own gets a frame: the cast, the Prince, the thing in the basement. Turn it on to keep frames to the actors your players own. It asks whether a player owns the actor rather than what type the actor is, because an actor type called `character` is a habit of the systems Foundry ships with and not a rule of Foundry's: World of Darkness calls its types PC, Vampire and Mortal, Pathfinder has its own names again, and ownership means the same thing in all of them.
+
+An actor with no portrait of its own gets nothing, since there is no sense in a frame around Foundry's grey placeholder. That is the one thing an NPC needs before it will show: a portrait on the actor, not just a token image.
 
 **Show portraits on hover** and **Hover delay** (each player's own). The delay keeps frames from flashing past while the pointer sweeps across a crowded scene.
 

@@ -57,8 +57,12 @@ export const hasPortrait = (img) => !!img && !PLACEHOLDER.test(String(img));
 /**
  * Whether this token gets a panel at all.
  *
- * The player-characters rule asks whether a player owns the actor, not what the
- * actor's type is called. An actor type named "character" is a habit of the
+ * Every token with a portrait of its own gets one unless a world asks for less.
+ * A GM hovers the opposition as often as the cast, and the frame is as much use
+ * for showing the table a face as for reminding one player of their own.
+ *
+ * When a world does ask for less, the rule asks whether a player owns the
+ * actor, not what the actor's type is called. An actor type named "character" is a habit of the
  * systems Foundry ships with rather than a rule of Foundry's: the World of
  * Darkness system's types are PC, Vampire, Mortal and nine others, and a check
  * against the word would quietly hide every panel in such a world while
@@ -69,9 +73,9 @@ export const hasPortrait = (img) => !!img && !PLACEHOLDER.test(String(img));
  * @param {boolean} state.visible  Whether the user can see the token on the canvas.
  * @param {string|null} state.img  The actor's portrait.
  * @param {boolean} state.hasPlayerOwner  Whether a player owns the actor.
- * @param {boolean} state.playersOnly  The world's setting.
+ * @param {boolean} state.playersOnly  The world's setting, off by default.
  */
-export function showsPanel({ visible, img, hasPlayerOwner = false, playersOnly = true }) {
+export function showsPanel({ visible, img, hasPlayerOwner = false, playersOnly = false }) {
   if (!visible) return false;
   if (!hasPortrait(img)) return false;
   if (playersOnly && !hasPlayerOwner) return false;

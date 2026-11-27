@@ -49,10 +49,11 @@ test("a token the user cannot see gets no panel", () => {
   assert.equal(showsPanel({ ...base, visible: true }), true);
 });
 
-test("player characters only, until the world says otherwise", () => {
-  const base = { visible: true, img: "p/keeper.webp", hasPlayerOwner: false };
-  assert.equal(showsPanel({ ...base, playersOnly: true }), false);
-  assert.equal(showsPanel({ ...base, playersOnly: false }), true);
+test("an NPC with a portrait is framed, because that is the point of hovering one", () => {
+  const npc = { visible: true, img: "p/keeper.webp", hasPlayerOwner: false };
+  assert.equal(showsPanel(npc), true, "no world setting means every portrait is framed");
+  assert.equal(showsPanel({ ...npc, playersOnly: false }), true);
+  assert.equal(showsPanel({ ...npc, playersOnly: true }), false, "a world can still ask for the cast alone");
 });
 
 test("the rule is ownership, so a system that never says \"character\" still works", () => {

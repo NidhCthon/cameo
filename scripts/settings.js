@@ -70,8 +70,8 @@ export async function refreshMarkIndex() {
 
 /** Whether the banderole is wanted at all, before the token's own nameplate rule. */
 export const wantsName = () => !!read(SHOW_NAME, true);
-/** Whether a panel is kept to actors a player owns. */
-export const playersOnly = () => !!read(PLAYERS_ONLY, true);
+/** Whether a panel is kept to actors a player owns. Off by default: a GM wants the cast too. */
+export const playersOnly = () => !!read(PLAYERS_ONLY, false);
 /** This player's own switch. */
 export const enabled = () => !!read(ENABLED, true);
 /** How long the pointer must rest on a token, in milliseconds. */
@@ -107,11 +107,11 @@ export function registerSettings() {
   });
   game.settings.register(MODULE_ID, PLAYERS_ONLY, {
     name: "Player characters only",
-    hint: "Only frame actors that a player owns, so the table's own characters get a cameo and the rest of the board does not. This asks who owns the actor rather than what the system calls its sheets, so it works the same in every game. Turn it off to frame every token with a portrait of its own, NPCs included, which is also the setting to use if you have not given your players their actors yet.",
+    hint: "Off by default, so every token with a portrait of its own gets a frame, the cast and the opposition alike. Turn it on to keep frames to the actors your players own. It asks who owns the actor rather than what the system calls its sheets, so it means the same thing in every game.",
     scope: "world",
     config: true,
     type: Boolean,
-    default: true
+    default: false
   });
   game.settings.register(MODULE_ID, MARK_INDEX, {
     scope: "world",

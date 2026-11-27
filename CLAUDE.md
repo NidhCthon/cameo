@@ -1,0 +1,14 @@
+# Working on Cameo
+
+- **What it is.** Hover a token, get its portrait in a wrought-iron frame beside the hotbar. Keep it that. The design was settled before any code was written and the open questions are answered in `README.md`; do not relitigate them.
+- **Commit identity.** Commit as `NidhCthon <NidhCthon@users.noreply.github.com>`, which is the repo-local config, not the global Pugjc one. From PowerShell 5.1, commit with `git commit -F <file>`, because a here-string containing quotes gets split into pathspecs.
+- **Tests.** Run `node --test tests/*.test.mjs`. A bare `tests/` argument fails with a misleading single failure. Every file under `scripts/` must load under `tests/foundry.mjs`; extend the stub rather than guarding code against it.
+- **Pure functions.** The drawing, the symbol matching and the visibility rules are plain functions over plain data. Only `scripts/cameo.js` knows about Foundry. That is what keeps the frame testable in node and viewable in `tools/preview` without a server.
+- **The frame connects.** The rail and the vine are each one closed path round the whole perimeter, placed by one continuous parameter. An earlier tiled build had three measurable breaks per side. Do not reintroduce corner or edge pieces, and keep the tests in `tests/frame.test.mjs` that make the claim checkable.
+- **Secrecy.** Foundry sends every world document to every client, so nothing here is hidden from a player who looks. The visibility rules are a courtesy. Do not claim secrecy in the UI, the settings hints or the docs; `tests/manifest.test.mjs` checks the prose for it.
+- **Symbols.** Cameo ships none, and the symbols a table uses are usually licensed to that table. They live in the world's own `Data/` folder. Never commit one.
+- **Copying code.** Only copy from MIT or similarly permissive sources, and add each to `THIRD_PARTY_NOTICES.md` in the same commit. Never copy from AGPL modules or repos with no licence.
+- **Dependencies.** Ask before adding any.
+- **Line endings.** Blobs are LF (see `.gitattributes`). If `git diff` shows a whole-file rewrite, compare with `--ignore-cr-at-eol` and fix the line endings before committing.
+- **Animation frames.** Never draw the frame from a `requestAnimationFrame` callback. rAF does not fire in a hidden or backgrounded tab, which leaves the ironwork silently empty. Measure the box and draw synchronously; a `ResizeObserver` handles the portrait arriving later.
+- **Deploying.** `node tools/deploy.mjs --no-restart` for script and style changes. It ships the committed HEAD only and refuses on uncommitted shipped files. A restart drops everyone at the table, so it checks for connections first.

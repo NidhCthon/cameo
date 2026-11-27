@@ -1,0 +1,132 @@
+/* Cameo's one stylesheet. The frame's metal is drawn in SVG by scripts/frame.js
+   and holds its own colours; what is here is the box the portrait sits in, the
+   lip of metal around it, and the way the panel arrives. */
+
+/* The lettering on the banderole: Cinzel, under the SIL Open Font License
+   (styles/fonts/OFL-Cinzel.txt), from Fontsource's variable build. The face is
+   split in two by script, so the browser fetches the second half only for a
+   name that needs it. The frame's name is drawn in inline SVG, which can use a
+   page font; a background-image SVG could not, which is why the ironwork is
+   inline rather than a data URI. */
+@font-face {
+  font-family: "Cinzel";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400 900;
+  src: url("fonts/cinzel-latin-wght-normal.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Cinzel";
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400 900;
+  src: url("fonts/cinzel-latin-ext-wght-normal.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+/* The panel is anchored by scripts/cameo.js, which measures the scene controls
+   and the hotbar rather than guessing where they are. It never takes the mouse:
+   the pointer has to stay on the token for the panel to stay up at all. */
+#cameo-layer {
+  position: fixed;
+  z-index: 60;
+  pointer-events: none;
+  display: flex;
+  align-items: flex-end;
+}
+
+.cameo-panel {
+  --cameo-band: 56px;
+  --cameo-skirt: 73px;
+  --cameo-max-w: 19rem;
+  --cameo-max-h: 42vh;
+  --cameo-bezel-w: 7px;
+  position: relative;
+  opacity: 0;
+  transform: translateY(10px) scale(0.985);
+  transition: opacity 180ms ease-out, transform 180ms cubic-bezier(0.2, 0.7, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.cameo-panel.cameo-in {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* A portrait that will not load leaves no empty frame behind. */
+.cameo-panel.cameo-broken {
+  display: none;
+}
+
+/* The band of ironwork is padding, so the frame has somewhere to be drawn
+   without the portrait moving. The skirt is the extra room the banderole needs
+   below the rail, and it closes up when there is no name. */
+.cameo-inner {
+  position: relative;
+  padding: var(--cameo-band);
+  padding-bottom: calc(var(--cameo-band) + var(--cameo-skirt));
+}
+
+/* The lip of metal the picture is set into, under the ironwork. */
+.cameo-bezel {
+  position: relative;
+  overflow: hidden;
+  background: #15161a;
+  border: var(--cameo-bezel-w) solid transparent;
+  border-image: linear-gradient(140deg, #4a4e56, #14151a 45%, #3b3f47) 1;
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.65), inset 0 0 0 1px rgba(185, 195, 205, 0.14);
+}
+
+.cameo-aperture {
+  position: relative;
+  overflow: hidden;
+  background: #0a0709;
+  line-height: 0;
+}
+
+/* The portrait is the point of the whole module, so it is never cropped: it
+   keeps its own shape and the frame is generated to fit it. */
+.cameo-portrait {
+  display: block;
+  width: auto;
+  height: auto;
+  min-width: 9rem;
+  max-width: var(--cameo-max-w);
+  max-height: var(--cameo-max-h);
+  object-fit: contain;
+}
+
+/* Settles the picture into the frame instead of leaving it pasted on. */
+.cameo-aperture::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 2.5rem rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
+
+/* The ironwork overflows its box on purpose: the banderole and the corner
+   scrolls reach past the padding. */
+.cameo-ironwork {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+}
+
+/* A short window gets a narrower band and a smaller portrait. That choice is
+   made in scripts/frame.js (frameFor), not here, because the band is also the
+   unit every measurement in the ironwork is a fraction of. */
+
+@media (prefers-reduced-motion: reduce) {
+  .cameo-panel {
+    transition: none;
+    transform: none;
+  }
+  .cameo-panel.cameo-in {
+    transform: none;
+  }
+}

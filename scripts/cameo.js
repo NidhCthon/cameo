@@ -17,10 +17,10 @@ import { FRAME, frameFor } from "./frame.js";
 import { markFor } from "./mark.js";
 import { cameoElement, mount, unmount } from "./panel.js";
 import {
-  charactersOnly,
   delay,
   enabled,
   markSettings,
+  playersOnly,
   refreshMarkIndex,
   registerSettings,
   wantsName
@@ -94,9 +94,13 @@ function anchor(el) {
 export function panelContentFor(token) {
   const actor = token?.actor;
   if (!actor) return null;
-  if (!showsPanel({ visible: token.visible, img: actor.img, actorType: actor.type, charactersOnly: charactersOnly() })) {
-    return null;
-  }
+  const state = {
+    visible: token.visible,
+    img: actor.img,
+    hasPlayerOwner: !!actor.hasPlayerOwner,
+    playersOnly: playersOnly()
+  };
+  if (!showsPanel(state)) return null;
   const named =
     wantsName() &&
     showsName(token.document.displayName, { isOwner: token.document.isOwner, isControlled: !!token.controlled });

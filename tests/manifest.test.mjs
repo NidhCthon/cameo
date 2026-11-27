@@ -37,7 +37,18 @@ test("the download URL carries the manifest's version", () => {
 test("init registers every setting the code reads, under the module id", async () => {
   await fireOnce("init");
   const keys = registered.filter((s) => s.module === cameo.MODULE_ID).map((s) => s.key);
-  for (const key of ["markFolder", "markFields", "markIndex", "showName", "charactersOnly", "enabled", "delay"]) {
+  // Taken from the constants rather than written out, so renaming one cannot
+  // leave the test passing against a key nothing registers any more.
+  const wanted = [
+    cameo.MARK_FOLDER,
+    cameo.MARK_FIELDS,
+    cameo.MARK_INDEX,
+    cameo.SHOW_NAME,
+    cameo.PLAYERS_ONLY,
+    cameo.ENABLED,
+    cameo.DELAY
+  ];
+  for (const key of wanted) {
     assert.ok(keys.includes(key), `${key} is registered`);
   }
 });
@@ -47,7 +58,7 @@ test("the world's settings are the world's and the player's are the player's", (
   assert.equal(scope("markFolder"), "world", "a world's symbols are the same for everyone at the table");
   assert.equal(scope("markFields"), "world");
   assert.equal(scope("showName"), "world");
-  assert.equal(scope("charactersOnly"), "world");
+  assert.equal(scope(cameo.PLAYERS_ONLY), "world");
   assert.equal(scope("enabled"), "client", "a player can turn their own frames off");
   assert.equal(scope("delay"), "client");
 });

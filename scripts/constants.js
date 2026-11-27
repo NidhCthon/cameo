@@ -9,8 +9,8 @@ export const MARK_FIELDS = "markFields";
 export const MARK_INDEX = "markIndex";
 /** Whether the banderole carries the token's name. */
 export const SHOW_NAME = "showName";
-/** Whether only character actors get a panel. */
-export const CHARACTERS_ONLY = "charactersOnly";
+/** Whether a panel is kept to actors a player owns. */
+export const PLAYERS_ONLY = "playerCharactersOnly";
 /** Each player's own switch, and how long they must rest on a token. */
 export const ENABLED = "enabled";
 export const DELAY = "delay";

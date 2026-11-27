@@ -2,7 +2,7 @@
   "id": "cameo",
   "title": "Cameo",
   "description": "Hover a token and its portrait rises beside the hotbar, large and uncropped, in a frame of wrought-iron vine with the character's faction mark cast into the collar and their name on the banderole.",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "compatibility": {
     "minimum": "14.365",
     "verified": "14.368"
@@ -20,7 +20,7 @@
   ],
   "url": "https://github.com/NidhCthon/cameo",
   "manifest": "https://github.com/NidhCthon/cameo/releases/latest/download/module.json",
-  "download": "https://github.com/NidhCthon/cameo/releases/download/v0.1.0/module.zip",
+  "download": "https://github.com/NidhCthon/cameo/releases/download/v0.2.0/module.zip",
   "readme": "https://github.com/NidhCthon/cameo#readme",
   "license": "https://github.com/NidhCthon/cameo/blob/main/LICENSE",
   "bugs": "https://github.com/NidhCthon/cameo/issues"

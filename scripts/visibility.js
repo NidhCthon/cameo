@@ -56,15 +56,24 @@ export const hasPortrait = (img) => !!img && !PLACEHOLDER.test(String(img));
 
 /**
  * Whether this token gets a panel at all.
+ *
+ * The player-characters rule asks whether a player owns the actor, not what the
+ * actor's type is called. An actor type named "character" is a habit of the
+ * systems Foundry ships with rather than a rule of Foundry's: the World of
+ * Darkness system's types are PC, Vampire, Mortal and nine others, and a check
+ * against the word would quietly hide every panel in such a world while
+ * offering nothing to tell the GM why. Ownership is what the rule is reaching
+ * for, and every system has it.
+ *
  * @param {object} state
  * @param {boolean} state.visible  Whether the user can see the token on the canvas.
  * @param {string|null} state.img  The actor's portrait.
- * @param {string|null} state.actorType  The actor's type, for the characters-only setting.
- * @param {boolean} state.charactersOnly  The world's setting.
+ * @param {boolean} state.hasPlayerOwner  Whether a player owns the actor.
+ * @param {boolean} state.playersOnly  The world's setting.
  */
-export function showsPanel({ visible, img, actorType, charactersOnly = true }) {
+export function showsPanel({ visible, img, hasPlayerOwner = false, playersOnly = true }) {
   if (!visible) return false;
   if (!hasPortrait(img)) return false;
-  if (charactersOnly && actorType !== "character") return false;
+  if (playersOnly && !hasPlayerOwner) return false;
   return true;
 }

@@ -44,20 +44,29 @@ test("Foundry's own placeholder portraits are not worth framing", () => {
 });
 
 test("a token the user cannot see gets no panel", () => {
-  const base = { img: "p/celeste.webp", actorType: "character", charactersOnly: true };
+  const base = { img: "p/celeste.webp", hasPlayerOwner: true, playersOnly: true };
   assert.equal(showsPanel({ ...base, visible: false }), false);
   assert.equal(showsPanel({ ...base, visible: true }), true);
 });
 
-test("characters only, until the world says otherwise", () => {
-  const base = { visible: true, img: "p/keeper.webp", actorType: "npc" };
-  assert.equal(showsPanel({ ...base, charactersOnly: true }), false);
-  assert.equal(showsPanel({ ...base, charactersOnly: false }), true);
+test("player characters only, until the world says otherwise", () => {
+  const base = { visible: true, img: "p/keeper.webp", hasPlayerOwner: false };
+  assert.equal(showsPanel({ ...base, playersOnly: true }), false);
+  assert.equal(showsPanel({ ...base, playersOnly: false }), true);
+});
+
+test("the rule is ownership, so a system that never says \"character\" still works", () => {
+  // The World of Darkness system's actor types are PC, Vampire, Mortal and nine
+  // more. Cameo is told who owns the actor and nothing about its type, so there
+  // is no word here for a system to spell differently.
+  for (const img of ["p/celeste.webp", "p/ambrose.webp"]) {
+    assert.equal(showsPanel({ visible: true, img, hasPlayerOwner: true, playersOnly: true }), true);
+  }
 });
 
 test("an actor with no portrait of its own gets no frame around nothing", () => {
   assert.equal(
-    showsPanel({ visible: true, img: "icons/svg/mystery-man.svg", actorType: "character", charactersOnly: true }),
+    showsPanel({ visible: true, img: "icons/svg/mystery-man.svg", hasPlayerOwner: true, playersOnly: true }),
     false
   );
 });

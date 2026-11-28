@@ -46,6 +46,7 @@ test("init registers every setting the code reads, under the module id", async (
     cameo.SHOW_NAME,
     cameo.PLAYERS_ONLY,
     cameo.ENABLED,
+    cameo.PANEL_SIZE,
     cameo.DELAY
   ];
   for (const key of wanted) {
@@ -60,7 +61,15 @@ test("the world's settings are the world's and the player's are the player's", (
   assert.equal(scope("showName"), "world");
   assert.equal(scope(cameo.PLAYERS_ONLY), "world");
   assert.equal(scope("enabled"), "client", "a player can turn their own frames off");
+  assert.equal(scope(cameo.PANEL_SIZE), "client", "a laptop and a monitor want different sizes");
   assert.equal(scope("delay"), "client");
+});
+
+test("every size the setting offers is a size the frame knows", () => {
+  const size = registered.find((s) => s.key === cameo.PANEL_SIZE);
+  assert.deepEqual(Object.keys(size.options.choices), cameo.SIZE_NAMES);
+  assert.equal(size.options.default, cameo.DEFAULT_SIZE);
+  for (const name of cameo.SIZE_NAMES) assert.ok(cameo.SIZES[name].band > 0, name);
 });
 
 test("a fresh world frames every portrait, with nothing to switch on first", () => {

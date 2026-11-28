@@ -26,7 +26,11 @@ To set one by hand on a single actor, put the image's path in the actor's `cameo
 
 An actor with no portrait of its own gets nothing, since there is no sense in a frame around Foundry's grey placeholder. That is the one thing an NPC needs before it will show: a portrait on the actor, not just a token image.
 
-**Show portraits on hover** and **Hover delay** (each player's own). The delay keeps frames from flashing past while the pointer sweeps across a crowded scene.
+**Show portraits on hover**, **Frame size** and **Hover delay** (each player's own). Size is Small, Medium or Large, because a frame that looks right on a monitor is half the screen on a laptop, and a short window steps down one size by itself. The delay keeps frames from flashing past while the pointer sweeps across a crowded scene.
+
+## Where the panel sits
+
+The bottom-left of the board: right of the scene controls and the player list, above the hotbar. Those three are measured at each hover, because their size changes with the player's UI scale and with whether the hotbar is collapsed. What they are measured against, and what happens when one of them measures as half the window, is `scripts/anchor.js`.
 
 ## What Foundry tells every client
 

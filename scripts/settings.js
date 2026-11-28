@@ -10,8 +10,10 @@ import {
   SHOW_NAME,
   PLAYERS_ONLY,
   ENABLED,
+  PANEL_SIZE,
   DELAY
 } from "./constants.js";
+import { DEFAULT_SIZE, SIZE_NAMES } from "./frame.js";
 import { isMarkFile, markLookup, parseFields } from "./mark.js";
 
 const read = (key, fallback) => {
@@ -74,6 +76,11 @@ export const wantsName = () => !!read(SHOW_NAME, true);
 export const playersOnly = () => !!read(PLAYERS_ONLY, false);
 /** This player's own switch. */
 export const enabled = () => !!read(ENABLED, true);
+/** How big this player wants their frames. */
+export const panelSize = () => {
+  const size = String(read(PANEL_SIZE, DEFAULT_SIZE) ?? "");
+  return SIZE_NAMES.includes(size) ? size : DEFAULT_SIZE;
+};
 /** How long the pointer must rest on a token, in milliseconds. */
 export const delay = () => Math.max(0, Number(read(DELAY, 120)) || 0);
 
@@ -126,6 +133,15 @@ export function registerSettings() {
     config: true,
     type: Boolean,
     default: true
+  });
+  game.settings.register(MODULE_ID, PANEL_SIZE, {
+    name: "Frame size",
+    hint: "How much of your screen a frame takes. Your own choice, so a player on a laptop and a GM on a monitor can each have it the size they want. A short window steps down one size on its own, so the panel always clears the hotbar.",
+    scope: "client",
+    config: true,
+    type: String,
+    choices: { small: "Small", medium: "Medium", large: "Large" },
+    default: DEFAULT_SIZE
   });
   game.settings.register(MODULE_ID, DELAY, {
     name: "Hover delay",

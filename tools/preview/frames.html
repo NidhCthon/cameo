@@ -56,9 +56,10 @@
   </fieldset>
 
   <fieldset>
-    <legend>Frame</legend>
-    <label><input type="radio" name="band" value="56" checked> Full, band 56</label>
-    <label><input type="radio" name="band" value="44"> Short window, band 44</label>
+    <legend>Size</legend>
+    <label><input type="radio" name="size" value="small"> Small</label>
+    <label><input type="radio" name="size" value="medium" checked> Medium</label>
+    <label><input type="radio" name="size" value="large"> Large</label>
   </fieldset>
 </div>
 
@@ -66,7 +67,7 @@
 <div class="measured" id="measured"></div>
 
 <script type="module">
-import { FRAME } from "/scripts/frame.js";
+import { FRAME, SIZES } from "/scripts/frame.js";
 import { cameoElement, mount } from "/scripts/panel.js";
 
 /* A stand-in sitter, drawn here rather than shipped: Cameo carries no artwork,
@@ -102,8 +103,7 @@ let live = null;
 
 function draw() {
   const [aw, ah] = pick("ar").split("/").map(Number);
-  const band = Number(pick("band"));
-  const style = band === FRAME.band ? FRAME : { ...FRAME, band, maxWidth: "15rem", maxHeight: "38vh" };
+  const style = { ...FRAME, ...SIZES[pick("size")] };
   live?.destroy();
   live = cameoElement(
     { img: portrait(aw * 220, ah * 220), name: pick("name"), mark: pick("mark") ? MARK : null, alt: "A stand-in sitter" },

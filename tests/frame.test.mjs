@@ -6,6 +6,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
   FRAME,
+  SIZE_NAMES,
   atPerim,
   collarGeometry,
   frameFor,
@@ -148,6 +149,26 @@ test("a short window gets a narrower band, a tall one the full frame", () => {
   assert.equal(frameFor(1080).band, FRAME.band);
   assert.ok(frameFor(760).band < FRAME.band);
   assert.equal(frameFor(undefined).band, FRAME.band, "an unknown viewport is not a short one");
+});
+
+test("a player's chosen size is the size they get, and the sizes differ", () => {
+  const bands = SIZE_NAMES.map((name) => frameFor(1080, name).band);
+  assert.deepEqual([...bands].sort((a, b) => a - b), bands, "small, medium, large in order");
+  assert.equal(new Set(bands).size, bands.length, "no two sizes are the same frame");
+  assert.equal(frameFor(1080, "enormous").band, FRAME.band, "an unknown size is the default");
+  // Every measurement in the ironwork is a fraction of the band, so a size with
+  // the band alone changed would let the portrait outgrow its own frame.
+  for (const name of SIZE_NAMES) {
+    const style = frameFor(1080, name);
+    assert.match(style.maxWidth, /rem$/, name);
+    assert.match(style.maxHeight, /vh$/, name);
+  }
+});
+
+test("a short window steps the chosen size down, and small has nowhere to fall", () => {
+  assert.equal(frameFor(760, "large").band, frameFor(1080, "medium").band);
+  assert.equal(frameFor(760, "medium").band, frameFor(1080, "small").band);
+  assert.equal(frameFor(760, "small").band, frameFor(1080, "small").band);
 });
 
 test("a name with markup in it cannot break out of the SVG", () => {

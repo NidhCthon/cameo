@@ -11,8 +11,9 @@ export const MARK_INDEX = "markIndex";
 export const SHOW_NAME = "showName";
 /** Whether a panel is kept to actors a player owns. */
 export const PLAYERS_ONLY = "playerCharactersOnly";
-/** Each player's own switch, and how long they must rest on a token. */
+/** Each player's own switch, how big their frames are, and how long they must rest on a token. */
 export const ENABLED = "enabled";
+export const PANEL_SIZE = "panelSize";
 export const DELAY = "delay";
 
 /** An actor flag that overrides the matched mark: a file path, or MARK_NONE. */

@@ -37,10 +37,10 @@
 }
 
 .cameo-panel {
-  --cameo-band: 56px;
-  --cameo-skirt: 73px;
-  --cameo-max-w: 19rem;
-  --cameo-max-h: 42vh;
+  --cameo-band: 44px;
+  --cameo-skirt: 57px;
+  --cameo-max-w: 14rem;
+  --cameo-max-h: 32vh;
   --cameo-bezel-w: 7px;
   position: relative;
   opacity: 0;

@@ -12,6 +12,7 @@
 // portrait a panel shows was already in the player's browser. The rules in
 // visibility.js keep the panel from drawing attention to a token the table has
 // not put on the table, which is a courtesy and not a guarantee.
+import { anchorFor } from "./anchor.js";
 import { MARK_FLAG, MODULE_ID } from "./constants.js";
 import { FRAME, frameFor } from "./frame.js";
 import { markFor } from "./mark.js";
@@ -20,6 +21,7 @@ import {
   delay,
   enabled,
   markSettings,
+  panelSize,
   playersOnly,
   refreshMarkIndex,
   registerSettings,
@@ -27,16 +29,20 @@ import {
 } from "./settings.js";
 import { showsName, showsPanel } from "./visibility.js";
 
+export * from "./anchor.js";
 export * from "./constants.js";
 export * from "./frame.js";
 export * from "./mark.js";
 export * from "./visibility.js";
 export { cameoElement } from "./panel.js";
 
-/** How far the panel sits from the sidebar's edge and the hotbar's top. */
-const GAP = 12;
-/** Used when the interface has not been laid out yet, or its parts have moved. */
-const FALLBACK = { left: 110, bottom: 120 };
+/**
+ * The widgets the panel keeps out of the way of. These are the things a player
+ * can see, not the regions they sit in: #ui-left and #ui-bottom are half the
+ * window each and mean nothing about where anything is drawn.
+ */
+const BESIDE = ["scene-controls", "players"];
+const ABOVE = ["hotbar"];
 
 /* ---------- a portrait in its frame, for any caller ---------- */
 
@@ -47,7 +53,7 @@ const FALLBACK = { left: 110, bottom: 120 };
  * @param {Actor} actor
  * @param {{name?: string, style?: object}} [options]
  */
-export function cameoFor(actor, { name = "", style = frameFor(globalThis.innerHeight) } = {}) {
+export function cameoFor(actor, { name = "", style = frameFor(globalThis.innerHeight, panelSize()) } = {}) {
   const chosen = actor?.getFlag?.(MODULE_ID, MARK_FLAG) ?? "";
   return cameoElement({ img: actor?.img, name, mark: markFor(chosen, actor, markSettings()) }, style);
 }
@@ -71,23 +77,23 @@ function hostLayer() {
 
 /**
  * Put the layer in the bottom-left corner of the board, clear of the interface:
- * right of the scene controls and above the hotbar. Both are measured rather
- * than guessed, because their size changes with the player's UI scale and with
- * whether the hotbar is collapsed.
+ * right of the scene controls and the player list, above the hotbar. They are
+ * measured rather than guessed, because their size changes with the player's UI
+ * scale and with whether the hotbar is collapsed. Where the numbers go once they
+ * are read is scripts/anchor.js, which also says what happens when one of them
+ * is nonsense.
  */
 function anchor(el) {
-  const right = (id) => {
-    const r = document.getElementById(id)?.getBoundingClientRect();
-    return r && r.width ? r.right : 0;
-  };
-  const top = (id) => {
-    const r = document.getElementById(id)?.getBoundingClientRect();
-    return r && r.height ? window.innerHeight - r.top : 0;
-  };
-  const left = Math.max(right("ui-left"), right("controls"), FALLBACK.left) + GAP;
-  const bottom = Math.max(top("ui-bottom"), top("hotbar"), FALLBACK.bottom) + GAP;
-  el.style.left = `${Math.round(left)}px`;
-  el.style.bottom = `${Math.round(bottom)}px`;
+  const rects = (ids) =>
+    ids.map((id) => document.getElementById(id)?.getBoundingClientRect()).filter(Boolean);
+  const { left, bottom } = anchorFor({
+    width: window.innerWidth,
+    height: window.innerHeight,
+    beside: rects(BESIDE),
+    above: rects(ABOVE)
+  });
+  el.style.left = `${left}px`;
+  el.style.bottom = `${bottom}px`;
 }
 
 /** What this client may be shown of a token, or null for no panel. */

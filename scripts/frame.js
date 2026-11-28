@@ -36,12 +36,28 @@ export const escapeAttr = (text) => escapeText(text).replace(/"/g, "&quot;");
 export const IRON = { shadow: "#000000", base: "#232428", light: "#b9c3cd", sheen: 0.55 };
 
 /**
+ * How big the panel is, as each player's own choice. A frame that is right on a
+ * 27-inch monitor is half the screen on a laptop, and the band is the only
+ * number a size has to set: every other measurement in the ironwork is a
+ * fraction of it, and the two maximums keep the portrait from outgrowing it.
+ */
+export const SIZES = {
+  small: { band: 32, maxWidth: "10rem", maxHeight: "22vh" },
+  medium: { band: 44, maxWidth: "14rem", maxHeight: "32vh" },
+  large: { band: 56, maxWidth: "19rem", maxHeight: "42vh" }
+};
+
+/** In order, so a short window can step down one. */
+export const SIZE_NAMES = ["small", "medium", "large"];
+
+export const DEFAULT_SIZE = "medium";
+
+/**
  * Study one from the design page: forged bar, tight scrolls, pointed leaves.
  * Every ratio is a fraction of the band, so the whole frame scales with it.
  */
 export const FRAME = {
-  /** How wide a margin the ironwork gets around the portrait, in pixels. */
-  band: 56,
+  ...SIZES[DEFAULT_SIZE],
   metal: IRON,
   /** Stroke widths, as fractions of the band. */
   rail: 0.1,
@@ -55,21 +71,22 @@ export const FRAME = {
   /** The banderole and the medallion's recess. */
   plateFill: "#2a2d34",
   discFill: "#1b1c20",
-  engrave: "#08090b",
-  /** How much room the portrait may take. CSS lengths, set on the panel. */
-  maxWidth: "19rem",
-  maxHeight: "42vh"
+  engrave: "#08090b"
 };
 
 /**
- * The frame scaled to the room available. A short window gets a narrower band
- * and a smaller portrait, so the whole panel still clears the hotbar on a
- * laptop. The band is the only number that matters: every other measurement in
- * the frame is a fraction of it.
+ * The frame at the size a player asked for, stepped down one on a short window
+ * so the whole panel still clears the hotbar on a laptop.
+ *
+ * @param {number} viewportHeight
+ * @param {string} [size]  A key of SIZES. Anything else is treated as the default.
+ * @param {object} [style]  FRAME, or a variation on it.
  */
-export function frameFor(viewportHeight, style = FRAME) {
-  if (!(viewportHeight > 0) || viewportHeight >= 820) return style;
-  return { ...style, band: 44, maxWidth: "15rem", maxHeight: "38vh" };
+export function frameFor(viewportHeight, size = DEFAULT_SIZE, style = FRAME) {
+  const asked = SIZE_NAMES.includes(size) ? size : DEFAULT_SIZE;
+  const short = viewportHeight > 0 && viewportHeight < 820;
+  const chosen = short ? SIZE_NAMES[Math.max(0, SIZE_NAMES.indexOf(asked) - 1)] : asked;
+  return { ...style, ...SIZES[chosen] };
 }
 
 /* ---------- metal ---------- */
